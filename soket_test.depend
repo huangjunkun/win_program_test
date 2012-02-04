@@ -1,0 +1,25 @@
+# depslib dependency file v1.0
+1326079765 source:e:\codeblocks\soket_test\main.cpp
+	<windows.h>
+	<iostream>
+	"udp_socket_test.h"
+	"tcp_socket_test.h"
+	"using_mutex_objects.h"
+	"using_event_objects.h"
+
+1324866023 e:\codeblocks\soket_test\udp_socket_test.h
+	<stdio.h>
+	"winsock2.h"
+
+1324866128 e:\codeblocks\soket_test\tcp_socket_test.h
+	<winsock2.h>
+	<stdio.h>
+
+1325647680 e:\codeblocks\soket_test\using_mutex_objects.h
+	<windows.h>
+	<stdio.h>
+
+1325923676 e:\codeblocks\soket_test\using_event_objects.h
+	<windows.h>
+	<stdio.h>
+

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Release" />
+	<File name="crt_time_test.h" open="0" top="0" tabpos="4">
+		<Cursor position="421" topLine="0" />
+	</File>
+	<File name="main.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="307" topLine="0" />
+	</File>
+	<File name="tcp_socket_test.h" open="0" top="0" tabpos="3">
+		<Cursor position="864" topLine="27" />
+	</File>
+	<File name="udp_socket_test.h" open="0" top="0" tabpos="2">
+		<Cursor position="200" topLine="9" />
+	</File>
+	<File name="using_event_objects.h" open="0" top="0" tabpos="3">
+		<Cursor position="5214" topLine="0" />
+	</File>
+	<File name="using_mutex_objects.h" open="0" top="0" tabpos="2">
+		<Cursor position="150" topLine="0" />
+	</File>
+	<File name="using_semaphore_objects.h" open="0" top="0" tabpos="0">
+		<Cursor position="574" topLine="13" />
+	</File>
+</CodeBlocks_layout_file>
