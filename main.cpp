@@ -1,20 +1,24 @@
-#include <windows.h>
+
+//#include <windows.h>
 #include <iostream>
 #include "udp_socket_test.h"
 #include "tcp_socket_test.h"
 #include "using_mutex_objects.h"
 #include "using_event_objects.h"
 
+
 using namespace std;
 
 int main()
 {
+
+///**
     {
     using namespace test_namespace;
     //test_using_mutex_objects();
     test_using_event_objects();
     }
-    /**
+/**
     {
     using namespace socket_test;
 //    for (;;)
