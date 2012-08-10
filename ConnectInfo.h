@@ -71,6 +71,7 @@ enum e_connect_info{
 
 struct connect_info_item2
 {
+	int				time;
 	int				resource_no;		//资源标识
 	int				connection_no; 		//连接标识
 	int				msg_type; 			//信息类型

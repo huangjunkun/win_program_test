@@ -4,9 +4,14 @@
 
 #include <Windows.h>
 #include "ConnectInfo.h"
+#include <cstdio>
+#include <cstdlib>
+#include <conio.h>
+#include <cassert>
 #include <string>
 #include <iostream>
-#include <cassert>
+#include <fstream>
+#include <iterator>
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -14,9 +19,9 @@
 #define WSTRING_from_STRING 0
 #define string_2_wstring 0
 
-STDMETHODIMP CConnectInfo::PushInfo1W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type, 
-									  /*[in]*/WSTRING msg1, 
-									  /*[in]*/ULONG resource_no, 
+STDMETHODIMP CConnectInfo::PushInfo1W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type,
+									  /*[in]*/WSTRING msg1,
+									  /*[in]*/ULONG resource_no,
 									  /*[in]*/ULONG connection_no )
 {
 // 	// ObjectLock lock(this);
@@ -41,6 +46,7 @@ STDMETHODIMP CConnectInfo::PushInfo1W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type,
 // 		push_backW(resource_no, connection_no, msg_type, end_line);
 // 	}
 	connect_info_item2 item;
+	item.time = ::GetTickCount();
 	item.resource_no = resource_no;
 	item.connection_no = connection_no;
 	item.msg_type = msg_type;
@@ -54,15 +60,16 @@ STDMETHODIMP CConnectInfo::PushInfo1W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type,
 	return S_OK;
 }
 
-STDMETHODIMP CConnectInfo::PushInfo2W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type, 
-									  /*[in]*/ULONG msg_id, 
-									  /*[in]*/ULONG resource_no, 
+STDMETHODIMP CConnectInfo::PushInfo2W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type,
+									  /*[in]*/ULONG msg_id,
+									  /*[in]*/ULONG resource_no,
 									  /*[in]*/ULONG connection_no )
 {
 // 	// ObjectLock lock(this);
 // 	msg_pool* ptr = msg_pool::get_instance();
 // 	PushInfo1W( msg_type, WSTRING_EX(ptr->get_msg_from_id(msg_id)), resource_no, connection_no );
 	connect_info_item2 item;
+	item.time = ::GetTickCount();
 	item.resource_no = resource_no;
 	item.connection_no = connection_no;
 	item.msg_type = msg_type;
@@ -73,10 +80,10 @@ STDMETHODIMP CConnectInfo::PushInfo2W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type,
 	return S_OK;
 }
 
-STDMETHODIMP CConnectInfo::PushFormatInfo1W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type, 
-										   /*[in]*/ULONG msg_id, 
-										   /*[in]*/ULONG num, 
-										   /*[in]*/ULONG resource_no, 
+STDMETHODIMP CConnectInfo::PushFormatInfo1W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type,
+										   /*[in]*/ULONG msg_id,
+										   /*[in]*/ULONG num,
+										   /*[in]*/ULONG resource_no,
 										   /*[in]*/ULONG connection_no )
 {
 // 	// ObjectLock lock(this);
@@ -94,6 +101,7 @@ STDMETHODIMP CConnectInfo::PushFormatInfo1W(/*[in]*/ICONNECTINFO_MSGTYPE msg_typ
 // 		PushInfo1W( msg_type, WSTRING_EX(format_str), resource_no, connection_no );
 // 	}
 	connect_info_item2 item;
+	item.time = ::GetTickCount();
 	item.resource_no = resource_no;
 	item.connection_no = connection_no;
 	item.msg_type = msg_type;
@@ -105,10 +113,10 @@ STDMETHODIMP CConnectInfo::PushFormatInfo1W(/*[in]*/ICONNECTINFO_MSGTYPE msg_typ
 	return S_OK;
 }
 
-STDMETHODIMP CConnectInfo::PushFormatInfo2W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type, 
-											/*[in]*/ULONG msg_id, 
-											/*[in]*/ULONGLONG num, 
-											/*[in]*/ULONG resource_no, 
+STDMETHODIMP CConnectInfo::PushFormatInfo2W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type,
+											/*[in]*/ULONG msg_id,
+											/*[in]*/ULONGLONG num,
+											/*[in]*/ULONG resource_no,
 											/*[in]*/ULONG connection_no )
 {
 // 	// ObjectLock lock(this);
@@ -126,6 +134,7 @@ STDMETHODIMP CConnectInfo::PushFormatInfo2W(/*[in]*/ICONNECTINFO_MSGTYPE msg_typ
 // 		PushInfo1W( msg_type, WSTRING_EX(format_str), resource_no, connection_no );
 // 	}
 	connect_info_item2 item;
+	item.time = ::GetTickCount();
 	item.resource_no = resource_no;
 	item.connection_no = connection_no;
 	item.msg_type = msg_type;
@@ -137,11 +146,11 @@ STDMETHODIMP CConnectInfo::PushFormatInfo2W(/*[in]*/ICONNECTINFO_MSGTYPE msg_typ
 	return S_OK;
 }
 
-STDMETHODIMP CConnectInfo::PushFormatInfo3W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type, 
-											/*[in]*/ULONG msg_id, 
-											/*[in]*/ULONG num1, 
-											/*[in]*/ULONG num2, 
-											/*[in]*/ULONG resource_no, 
+STDMETHODIMP CConnectInfo::PushFormatInfo3W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type,
+											/*[in]*/ULONG msg_id,
+											/*[in]*/ULONG num1,
+											/*[in]*/ULONG num2,
+											/*[in]*/ULONG resource_no,
 											/*[in]*/ULONG connection_no )
 {
 // 	// ObjectLock lock(this);
@@ -165,6 +174,7 @@ STDMETHODIMP CConnectInfo::PushFormatInfo3W(/*[in]*/ICONNECTINFO_MSGTYPE msg_typ
 // 		PushInfo1W( msg_type, WSTRING_EX(format_str), resource_no, connection_no );
 // 	}
 	connect_info_item2 item;
+	item.time = ::GetTickCount();
 	item.resource_no = resource_no;
 	item.connection_no = connection_no;
 	item.msg_type = msg_type;
@@ -179,10 +189,10 @@ STDMETHODIMP CConnectInfo::PushFormatInfo3W(/*[in]*/ICONNECTINFO_MSGTYPE msg_typ
 }
 
 
-STDMETHODIMP CConnectInfo::PushFormatInfo4W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type, 
-											/*[in]*/ULONG msg_id, 
-											/*[in]*/WSTRING str, 
-											/*[in]*/ULONG resource_no, 
+STDMETHODIMP CConnectInfo::PushFormatInfo4W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type,
+											/*[in]*/ULONG msg_id,
+											/*[in]*/WSTRING str,
+											/*[in]*/ULONG resource_no,
 											/*[in]*/ULONG connection_no )
 {
 // 	// ObjectLock lock(this);
@@ -199,6 +209,7 @@ STDMETHODIMP CConnectInfo::PushFormatInfo4W(/*[in]*/ICONNECTINFO_MSGTYPE msg_typ
 // 		PushInfo1W( msg_type, WSTRING_EX(format_str), resource_no, connection_no );
 // 	}
 	connect_info_item2 item;
+	item.time = ::GetTickCount();
 	item.resource_no = resource_no;
 	item.connection_no = connection_no;
 	item.msg_type = msg_type;
@@ -213,11 +224,11 @@ STDMETHODIMP CConnectInfo::PushFormatInfo4W(/*[in]*/ICONNECTINFO_MSGTYPE msg_typ
 	return S_OK;
 }
 
-STDMETHODIMP CConnectInfo::PushFormatInfo5W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type, 
-											/*[in]*/ULONG msg_id, 
-											/*[in]*/WSTRING str1, 
-											/*[in]*/WSTRING str2, 
-											/*[in]*/ULONG resource_no, 
+STDMETHODIMP CConnectInfo::PushFormatInfo5W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type,
+											/*[in]*/ULONG msg_id,
+											/*[in]*/WSTRING str1,
+											/*[in]*/WSTRING str2,
+											/*[in]*/ULONG resource_no,
 											/*[in]*/ULONG connection_no )
 {
 // 	// ObjectLock lock(this);
@@ -239,6 +250,7 @@ STDMETHODIMP CConnectInfo::PushFormatInfo5W(/*[in]*/ICONNECTINFO_MSGTYPE msg_typ
 // 		PushInfo1W( msg_type, WSTRING_EX(format_str), resource_no, connection_no );
 // 	}
 	connect_info_item2 item;
+	item.time = ::GetTickCount();
 	item.resource_no = resource_no;
 	item.connection_no = connection_no;
 	item.msg_type = msg_type;
@@ -251,15 +263,15 @@ STDMETHODIMP CConnectInfo::PushFormatInfo5W(/*[in]*/ICONNECTINFO_MSGTYPE msg_typ
 	memcpy(buffer, &str2.len, 4), buffer += 4;
 	memcpy(buffer, str2.str, str2.len * sizeof(WCHAR)); // buffer += str1.len * sizeof(WCHAR);
 	push_back2(item);
-	
+
 	return S_OK;
 }
 
-STDMETHODIMP CConnectInfo::PushFormatInfo6W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type, 
-											/*[in]*/ULONG msg_id, 
-											/*[in]*/ULONG num, 
-											/*[in]*/WSTRING str, 
-											/*[in]*/ULONG resource_no, 
+STDMETHODIMP CConnectInfo::PushFormatInfo6W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type,
+											/*[in]*/ULONG msg_id,
+											/*[in]*/ULONG num,
+											/*[in]*/WSTRING str,
+											/*[in]*/ULONG resource_no,
 											/*[in]*/ULONG connection_no )
 {
 // 	// ObjectLock lock(this);
@@ -282,6 +294,7 @@ STDMETHODIMP CConnectInfo::PushFormatInfo6W(/*[in]*/ICONNECTINFO_MSGTYPE msg_typ
 // 		PushInfo1W( msg_type, WSTRING_EX(format_str), resource_no, connection_no );
 // 	}
 	connect_info_item2 item;
+	item.time = ::GetTickCount();
 	item.resource_no = resource_no;
 	item.connection_no = connection_no;
 	item.msg_type = msg_type;
@@ -296,11 +309,11 @@ STDMETHODIMP CConnectInfo::PushFormatInfo6W(/*[in]*/ICONNECTINFO_MSGTYPE msg_typ
 	return S_OK;
 }
 
-STDMETHODIMP CConnectInfo::PushFormatInfo7W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type, 
-											/*[in]*/ULONG msg_id, 
-											/*[in]*/WSTRING str, 
-											/*[in]*/ULONG num, 
-											/*[in]*/ULONG resource_no, 
+STDMETHODIMP CConnectInfo::PushFormatInfo7W(/*[in]*/ICONNECTINFO_MSGTYPE msg_type,
+											/*[in]*/ULONG msg_id,
+											/*[in]*/WSTRING str,
+											/*[in]*/ULONG num,
+											/*[in]*/ULONG resource_no,
 											/*[in]*/ULONG connection_no )
 {
 // 	// ObjectLock lock(this);
@@ -323,6 +336,7 @@ STDMETHODIMP CConnectInfo::PushFormatInfo7W(/*[in]*/ICONNECTINFO_MSGTYPE msg_typ
 // 		PushInfo1W( msg_type, WSTRING_EX(format_str), resource_no, connection_no );
 // 	}
 	connect_info_item2 item;
+	item.time = ::GetTickCount();
 	item.resource_no = resource_no;
 	item.connection_no = connection_no;
 	item.msg_type = msg_type;
@@ -331,7 +345,7 @@ STDMETHODIMP CConnectInfo::PushFormatInfo7W(/*[in]*/ICONNECTINFO_MSGTYPE msg_typ
 	item.param.resize(8  + str.len * sizeof(WCHAR));
 	char* buffer = &item.param[0];
 	memcpy(buffer, &str.len, 4), buffer += 4;
-	memcpy(buffer, str.str, str.len * sizeof(WCHAR)), buffer += str.len * sizeof(WCHAR); 
+	memcpy(buffer, str.str, str.len * sizeof(WCHAR)), buffer += str.len * sizeof(WCHAR);
 	memcpy(buffer, &num, 4), buffer += 4;
 	push_back2(item);
 
@@ -351,14 +365,13 @@ void CConnectInfo::get_new_conncet_info2( /*[in]*/BUFFER_PTR buffer, /*[in]*/BUF
 	bool has_info = fetch_one_item2( one_item );
 	while( has_info )
 	{
-		size_t length = one_item.param.length();
-		if( (sum_length + length + 20) > bufLen )
+		unsigned length = one_item.param.length();
+		if( (sum_length + length + 28) > bufLen )
 		{
 			push_front2( one_item );
 			break;
 		}
-		std::cout << " fetch_one_item2 this item's length: " << (sum_length + length + 20) << "\n";
-
+		::memcpy( (char*)buffer+sum_length, &(one_item.time), 4 ), sum_length += 4;
 		::memcpy( (char*)buffer+sum_length, &(one_item.resource_no), 4 ), sum_length += 4;
 		::memcpy( (char*)buffer+sum_length, &(one_item.connection_no), 4 ), sum_length += 4;
 		::memcpy( (char*)buffer+sum_length, &(one_item.msg_type), 4 ), sum_length += 4;
@@ -396,7 +409,6 @@ void CConnectInfo::get_new_conncet_info2( /*[in]*/BUFFER_PTR buffer, /*[in]*/BUF
 
 bool CConnectInfo::fetch_one_item2( connect_info_item2& result )
 {
-
 	if (!_items2.empty())
 	{
 		result = _items2.front();
@@ -426,7 +438,7 @@ void CConnectInfo::push_back2( int resource_no, int connection_no, ICONNECTINFO_
 	back.resource_no = resource_no;
 	back.connection_no = connection_no;
 	back.msg_type = (int)msg_type;
-	back.param_type = param_type;	
+	back.param_type = param_type;
 	back.param = param;
 }
 
@@ -461,6 +473,7 @@ void CConnectInfo::load_connect_info2( /*[in]*/BUFFER_PTR buffer, /*[in]*/BUFFER
 			break;
 
 		connect_info_item2& one_item = _items2[item_i];
+		::memcpy(&(one_item.time), read_buf, 4 ), read_buf += 4;
 		::memcpy(&(one_item.resource_no), read_buf, 4 ), read_buf += 4;
 		::memcpy(&(one_item.connection_no), read_buf, 4 ), read_buf += 4;
 		::memcpy(&(one_item.msg_type), read_buf, 4 ), read_buf += 4;
@@ -469,66 +482,9 @@ void CConnectInfo::load_connect_info2( /*[in]*/BUFFER_PTR buffer, /*[in]*/BUFFER
 // 		std::cout << " msg_id:" << one_item.msg_id << "\n";
 // 		std::cout << " param_type:" << one_item.param_type << "\n";
 		read_buf += read_info_param(read_buf, one_item.param_type, one_item.param);
-// 		switch(one_item.param_type)
-// 		{
-// 		case E_CONNECT_INFO_NULL:
-// 			break;
-// 		case E_CONNECT_INFO_LONG:
-// 			one_item.param.resize(4);
-// 			memcpy(&one_item.param[0], read_buf, 4), read_buf += 4;
-// 			break;
-// 		case E_CONNECT_INFO_LONGLONG:
-// 			one_item.param.resize(8);
-// 			memcpy(&one_item.param[0], read_buf, 8), read_buf += 8;
-// 			break;
-// 		case E_CONNECT_INFO_LONG_LONG:
-// 			one_item.param.resize(8);
-// 			memcpy(&one_item.param[0], read_buf, 8), read_buf += 8;
-// 			break;
-// 		case E_CONNECT_INFO_STRING:
-// 			{
-// 				size_t str_size = 0;
-// 				memcpy(&str_size, read_buf, 4);
-// 				one_item.param.resize(str_size * sizeof(WCHAR) + 4);
-// 				memcpy(&one_item.param[0], read_buf, one_item.param.size()), read_buf += one_item.param.size();
-// 			}
-// 			break;
-// 		case E_CONNECT_INFO_STRING_STRING:
-// 			{
-// 				size_t str_size = 0;
-// 				memcpy(&str_size, read_buf, 4);
-// 				std::string param1;
-// 				param1.resize(str_size * sizeof(WCHAR) + 4);
-// 				memcpy(&param1[0], read_buf, param1.size()), read_buf += param1.size();
-// 				str_size = 0;
-// 				memcpy(&str_size, read_buf, 4);
-// 				std::string param2;
-// 				param2.resize(str_size * sizeof(WCHAR) + 4);
-// 				memcpy(&param2[0], read_buf, param2.size()), read_buf += param2.size();
-// 				one_item.param = param1 + param2;
-// 			}
-// 			break;
-// 		case E_CONNECT_INFO_STRING_LONG:
-// 			{
-// 				size_t str_size = 0;
-// 				memcpy(&str_size, read_buf, 4);
-// 				one_item.param.resize(str_size * sizeof(WCHAR) + 8);
-// 				memcpy(&one_item.param[0], read_buf, one_item.param.size()), read_buf += one_item.param.size();
-// 			}
-// 			break;
-// 		case E_CONNECT_INFO_LONG_STRING:
-// 			{
-// 				size_t str_size = 0;
-// 				memcpy(&str_size, read_buf+4, 4);
-// 				one_item.param.resize(str_size * sizeof(WCHAR) + 8);
-// 				memcpy(&one_item.param[0], read_buf, one_item.param.size()), read_buf += one_item.param.size();
-// 			}
-// 			break;
-// 		default:
-// 			assert(!"Unkown enum type.");
-// 		}
  	}
 	_items2.resize(item_i);
+	*pResult = item_i;
 }
 
 unsigned CConnectInfo::read_info_param( BUFFER_PTR buffer, e_connect_info param_type, std::string& param)
@@ -536,7 +492,7 @@ unsigned CConnectInfo::read_info_param( BUFFER_PTR buffer, e_connect_info param_
 	BUFFER_PTR read_buf = buffer;
 	unsigned param_len = 0;
 	memcpy(&param_len, read_buf, 4), read_buf += 4;
-	std::cout << " param_len:" << param_len << "\n";
+	//std::cout << " param_len:" << param_len << "\n";
 	switch(param_type)
 	{
 	case E_CONNECT_INFO_NULL:
@@ -599,6 +555,95 @@ unsigned CConnectInfo::read_info_param( BUFFER_PTR buffer, e_connect_info param_
 	return (read_buf - buffer);
 }
 
+void PrintParam(e_connect_info param_type, const std::string& param)
+{
+    char* buffer = const_cast<char*>(param.c_str());
+	switch(param_type)
+	{
+	case E_CONNECT_INFO_NULL:
+		break;
+	case E_CONNECT_INFO_LONG:
+        assert (param.size() == 4);
+        std::cout << " [long]" << *(reinterpret_cast<long*>(buffer)) << "\n";
+		break;
+	case E_CONNECT_INFO_LONGLONG:
+        assert (param.size() == 8);
+        std::cout << " [long long]" << *(reinterpret_cast<long long*>(buffer)) << "\n";
+		break;
+	case E_CONNECT_INFO_LONG_LONG:
+        assert (param.size() == 8);
+        std::cout << " [long]" << *(reinterpret_cast<long*>(buffer))
+        << " [long]" << *(reinterpret_cast<long*>(buffer)) << "\n";
+		break;
+	case E_CONNECT_INFO_STRING:
+		{
+			size_t str_size = 0;
+			memcpy(&str_size, buffer, 4);
+		    assert (param.size() == str_size * sizeof(WCHAR) + 4);
+			const std::wstring wstr(reinterpret_cast<wchar_t*>(buffer+4), str_size);
+            std::wcout << " [string]" << wstr << "\n";
+		}
+		break;
+	case E_CONNECT_INFO_STRING_STRING:
+		{
+			size_t str_size1 = 0, str_size2 = 0;
+			memcpy(&str_size1, buffer, 4);
+			const std::wstring wstr1(reinterpret_cast<wchar_t*>(buffer+4), str_size1);
+			buffer += (str_size1 * sizeof(WCHAR) + 4);
+			memcpy(&str_size2, buffer, 4);
+			const std::wstring wstr2(reinterpret_cast<wchar_t*>(buffer+4), str_size2);
+
+		    assert (param.size() == (str_size1+str_size2) * sizeof(WCHAR) + 8);
+            std::wcout << " [string]" << wstr1 << " [string]" << wstr2 << "\n";
+
+		}
+		break;
+	case E_CONNECT_INFO_STRING_LONG:
+		{
+			size_t str_size = 0;
+			memcpy(&str_size, buffer, 4);
+			const std::wstring wstr(reinterpret_cast<wchar_t*>(buffer+4), str_size);
+            buffer += (str_size * sizeof(WCHAR) + 4);
+		    assert (param.size() == str_size * sizeof(WCHAR) + 8);
+            std::wcout << " [string]" << wstr << " [long]" << *(reinterpret_cast<long*>(buffer)) << "\n";
+
+		}
+		break;
+	case E_CONNECT_INFO_LONG_STRING:
+		{
+			size_t str_size = 0;
+			memcpy(&str_size, buffer+4, 4);
+			const std::wstring wstr(reinterpret_cast<wchar_t*>(buffer+8), str_size);
+
+		    assert (param.size() == str_size * sizeof(WCHAR) + 8);
+            std::wcout << " [long]" << *(reinterpret_cast<long*>(buffer)) << " [string]" << wstr << "\n";
+		}
+		break;
+	default:
+		assert(!"Unkown enum type.");
+	}
+}
+void PrintCConnectInfo(CConnectInfo& info_bak)
+{
+	ULONG info_count = 0;
+	info_bak.ConnectInfoCount(&info_count);
+	std::cout << " info_count:" << info_count << "\n";
+	std::cout << " --- begin ---\n";
+	for (size_t i = 0; i < info_count; ++i )
+	{
+		connect_info_item2& item = info_bak[i];
+		std::cout << " time:" << item.time << "\n";
+		std::cout << " resource_no:" << item.resource_no << "\n";
+		std::cout << " connection_no:" << item.connection_no << "\n";
+		std::cout << " msg_type:" << item.msg_type << "\n";
+		std::cout << " msg_id:" << item.msg_id << "\n";
+		std::cout << " param_type:" << item.param_type << "\n";
+//		std::cout << " param:" << item.param << "\n";
+        PrintParam(item.param_type, item.param);
+        std::cout << "\n";
+	}
+	std::cout << " --- end ---\n";
+}
 int test_CConnectInfo()
 {
 	CConnectInfo connect_info;
@@ -620,20 +665,67 @@ int test_CConnectInfo()
 	connect_info.GetNewConnectInfoW((BUFFER_PTR)buffer, MAX_BUFFER_SIZE, &result_size, &result );
 	std::cout << " ** result_size:" << result_size << " result:" << result << "\n";
 
+	std::ofstream fout("data.dat", std::ios::binary); // | std::ios::app
+	fout << result_size << "\n";// +2, "\n"(std::endl);
+	std::ostreambuf_iterator<char> out_iter(fout);
+	std::copy(buffer, buffer + result_size, out_iter);
+	//fout << std::endl;
+	fout.close();
+
+
 	result_size = 0, result = 0;
 	CConnectInfo info_bak;
 	info_bak.LoadConnectInfoW((BUFFER_PTR)buffer, MAX_BUFFER_SIZE, &result);
-	ULONG info_count = 0;
-	info_bak.ConnectInfoCount(&info_count);
-	std::cout << " info_count:" << info_count << "\n";
 	std::cout << " ** result_size:" << result_size << " result:" << result << "\n";
-	for (size_t i = 0; i < info_count; ++i )
-	{
-		connect_info_item2& item = info_bak[i];
-		std::cout << " msg_id:" << item.msg_id << "\n";
-		std::cout << " param_type:" << item.param_type << "\n";
-		std::cout << " param:" << item.param << "\n";
-	}
-
+    PrintCConnectInfo(info_bak);
 	return 0;
+}
+int connect_info_pickup(int argc, char* argv[])
+{
+    ;
+}
+
+int main(int argc, char* argv[])
+{
+    //test_CConnectInfo();
+    if (3 == argc)
+    { // argv[0] =  { program.exe }
+        size_t buf_size = atoi(argv[1]);
+        const char* buffer = argv[2];
+        long result = 0;
+        CConnectInfo info_bak;
+        info_bak.LoadConnectInfoW((BUFFER_PTR)buffer, buf_size, &result);
+        std::cout << " result:" << result << "\n";
+        PrintCConnectInfo(info_bak);
+    }
+    if (2 == argc)
+    {
+        std::string data_file(argv[1]);
+        std::ifstream fin(data_file.c_str(), std::ios::binary | std::ios::in);
+        size_t buf_size;
+        fin >> buf_size;
+        fin.ignore(1, '\n');// pass "\n"
+//        //fin.getline()
+        //fin.seekg(2);
+
+        std::istreambuf_iterator<char> fin_iter(fin);
+        std::string buff_s(fin_iter, std::istreambuf_iterator<char>());
+        //std::cout << " " << buf_size << " " << buff_s.size() << "\n";
+        assert (buff_s.size() == buf_size);
+        long result = 0;
+        CConnectInfo info_bak;
+        info_bak.LoadConnectInfoW(BUFFER_PTR(buff_s.c_str()), buff_s.size(), &result);
+        //std::cout << " result:" << result << "\n";
+        PrintCConnectInfo(info_bak);
+
+    }
+    else
+        printf("Input error.\n"
+               "Usage1: [program]***.exe [long]buffer_size [char*]buffer.\n"
+               "Usage2: [program]***.exe [data_file].\\data.txt.\n");
+
+
+    printf(" ^_____^ end.\n");
+    getch();
+    return 0;
 }
