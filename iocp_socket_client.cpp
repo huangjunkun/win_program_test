@@ -1,6 +1,8 @@
 
 #include "iocp_socket.h"
-
+#include <cstdlib>
+#include <cstring>
+#include <conio.h>
 using namespace std;
 using namespace test_namespace;
 
@@ -35,13 +37,58 @@ int client_test()
         WSACleanup();
         return 1;
     }
+   // /*****
+    string strIp = "127.0.0.1"; //default.
+    int port = 10000;
+    char buffer[64];
+    std::cout << " Input remote IP:";
+    do {
+        cin.getline(buffer, sizeof(buffer));
+        strIp.assign(buffer);
+        size_t count = 0;
+        size_t index = 0, next_index = 0;
+        while (true)
+        {
+            (next_index = strIp.find('.', index));
+            int value = atoi(strIp.substr(index, next_index-index).c_str());
+//            std::cout << value << "\n";
+//            getch();
+            if (value >= 0 && value < 256)
+            {
+                 ++count;
+                index = next_index+1;
+                if (next_index == string::npos)
+                    break;
+            }
+            else
+                break;
+        }
+        if (4 == count)
+            break;
+        else
+            std::cout << " Again input remote IP:";
+    } while (true);
 
+    std::cout << " Input remote PORT:";
+    do {
+        cin.getline(buffer, sizeof(buffer));
+        int value = atoi(buffer);
+        if (!(EINVAL  == errno || 0 == value ))
+        {
+            port = value;
+            cout << "port:" << port << "\n";
+            break;
+        }
+    } while (true);
+    //******/
     //----------------------
     // The sockaddr_in structure specifies the address family,
     // IP address, and port of the server to be connected to.
     clientService.sin_family = AF_INET;
-    clientService.sin_addr.s_addr = inet_addr( "127.0.0.1" );
-    clientService.sin_port = htons( 10000 );
+//    clientService.sin_addr.s_addr = inet_addr( "183.16.49.174" );//127.0.0.1
+//    clientService.sin_port = htons( 10000 );
+    clientService.sin_addr.s_addr = inet_addr(strIp.c_str());
+    clientService.sin_port = htons( port );
 
     //----------------------
     // Connect to server.
